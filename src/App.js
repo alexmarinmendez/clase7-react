@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 
-import customFetch from './utils/customFetch';
-
 function App() {
   const [datos, setDatos] = useState([]);
   const [error, setError] = useState({
@@ -12,12 +10,9 @@ function App() {
 
   //componentDidMount
   useEffect(() => {
-    customFetch()
-    .then(result => setDatos(result))
-    .catch(err => setError({
-      isError: true,
-      errorMessage: err
-    }))
+    fetch('https://api.mercadolibre.com/sites/MLA/search?q=squid')
+      .then(response => response.json())
+      .then(response => setDatos(response.results))
   }, []);
 
   return (
@@ -30,7 +25,7 @@ function App() {
         {
           error.isError
           ? <p>Hubo un error</p>
-          : datos.map((dato) => <li key={dato.id}>{dato.name}</li>)
+          : datos.map((dato) => <li key={dato.id}>{dato.title}</li>)
         }
       </ol>
       <hr />
